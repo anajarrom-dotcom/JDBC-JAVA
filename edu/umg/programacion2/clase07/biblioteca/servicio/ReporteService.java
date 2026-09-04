@@ -55,7 +55,17 @@ public class ReporteService {
      */
     public Set<Libro> librosNuncaPrestados() throws SQLException {
         Set<Libro> resultado = new HashSet<>();
-        // TODO: usar libroDAO y prestamoDAO para llenar "resultado" segun las pistas de arriba.
+
+        Set<String> titulosConPrestamo = new HashSet<>();
+        for (PrestamoDetalle detalle : prestamoDAO.listarPrestamosActivosConLibro()) {
+            titulosConPrestamo.add(detalle.getTituloLibro());
+        }
+
+        for (Libro libro : libroDAO.listarTodos()) {
+            if (!titulosConPrestamo.contains(libro.getTitulo())) {
+                resultado.add(libro);
+            }
+        }
 
         return resultado;
     }
